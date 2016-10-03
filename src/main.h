@@ -20,7 +20,7 @@
 #include "utilities.h"
 #include "scene.h"
 
-using namespace std;
+//using namespace std;
 
 //-------------------------------
 //----------PATH TRACER----------

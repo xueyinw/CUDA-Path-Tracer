@@ -2,7 +2,7 @@
 
 #include <glm/glm.hpp>
 
-using namespace std;
+//using namespace std;
 
 class image {
 private:
