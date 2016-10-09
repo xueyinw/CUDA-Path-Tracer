@@ -7,6 +7,18 @@
 * Compiled with Visual Studio 2013 and CUDA 7.5
 
 ==================================================================
+##My Path Tracer Features
+###Core Features 
+1. A shading kernel with BSDF evaluation:
+  * Ideal Diffuse surfaces
+  * Perfectly specular-reflective (mirrored) surfaces
+2. Path continuation/termination using Stream Compaction
+3. toggle between sorting path/intersection continuous by material type
+4. toggle between cache first bounce
+
+###Extra Coolness...
+
+==================================================================
 ###Result In Progress
 
 ####Ideal Diffuse surfaces(without Anti-Aliasing)
