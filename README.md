@@ -25,6 +25,17 @@
 ==================================================================
 ###Result In Progress
 
+####Diffuse, Perfect Specular Wall, Transmissive and Depth of Field 
+`Left Wall` : Reflection = 1, `Left Blue Ball`: Refraction = 1
+`Middle Purple Ball`: Refraction + Reflection = 1, No Diffuse, `Right Pink Ball`: Only Diffuse
+![alt text](https://github.com/xueyinw/Project3-CUDA-Path-Tracer/blob/master/results/cornellTestDOF.2016-10-09_19-18-26z.5000samp.png "Depth Of Field and Mirror")
+
+####Fresnel Refraction 
+`Left Ball` : RGB = (0.98, 0.98, 0.98), Specular RGB = (0.25, 0.25, 0.8),  Reflection = 0.3, Refraction = 0.2, Diffuse = 0.5
+`Middle Cube`: Reflection = 0.8, Refraction = 0.2, No Diffuse
+`Right Pink Ball`: Only Diffuse
+![alt text](https://github.com/xueyinw/Project3-CUDA-Path-Tracer/blob/master/results/cornellTestFresnel.2016-10-09_23-18-37z.5000samp.png "Fresnel Refraction")
+
 ####Ideal Diffuse surfaces(without Anti-Aliasing)
 ![alt text](https://github.com/xueyinw/Project3-CUDA-Path-Tracer/blob/master/results/cornell.2016-10-03_01-03-54z.5000samp.png "Ideal Diffuse surfaces")
 
