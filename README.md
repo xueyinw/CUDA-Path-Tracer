@@ -17,6 +17,9 @@
 4. toggle between cache first bounce
 
 ###Extra Coolness...
+1. Refraction (e.g. glass/water) [PBRT 8.2] with Frensel effects using Schlick's approximation  
+   Found great reference : http://graphics.stanford.edu/courses/cs148-10-summer/docs/2006--degreve--reflection_refraction.pdf
+2. Physically-based depth-of-field
 
 ==================================================================
 ###Result In Progress
