@@ -1,7 +1,7 @@
 #include "main.h"
 #include "preview.h"
 #include <cstring>
-
+#include <chrono>
 static std::string startTimeString;
 
 // For camera controls
@@ -25,6 +25,10 @@ int iteration;
 
 int width;
 int height;
+
+//test time
+std::chrono::high_resolution_clock::time_point beginTime;
+std::chrono::high_resolution_clock::time_point endTime;
 
 //-------------------------------
 //-------------MAIN--------------
@@ -117,8 +121,11 @@ void runCuda() {
         cameraPosition += cam.lookAt;
         cam.position = cameraPosition;
         camchanged = false;
+
+		beginTime = std::chrono::high_resolution_clock::now();
       }
 
+	   
     // Map OpenGL buffer object for writing from CUDA on a single GPU
     // No data is moved (Win & Linux). When mapped to CUDA, OpenGL should not use this buffer
 
@@ -139,7 +146,12 @@ void runCuda() {
         // unmap buffer object
         cudaGLUnmapBufferObject(pbo);
     } else {
-        saveImage();
+		endTime = std::chrono::high_resolution_clock::now();
+		std::chrono::duration<double, std::milli> duro = beginTime - endTime;
+		float deltaTime = duro.count();
+		double oneIterationTime = renderState->iterations / deltaTime;
+		std::cout << " An iteration takes " << oneIterationTime << " ms " << std::endl;
+		saveImage();
         pathtraceFree();
         cudaDeviceReset();
         exit(EXIT_SUCCESS);

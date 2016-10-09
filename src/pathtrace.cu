@@ -193,6 +193,7 @@ __global__ void generateRayFromCamera(Camera cam, int iter, int traceDepth, Path
 
 		segment.ray.origin = cam.position;
         segment.color = glm::vec3(1.0f, 1.0f, 1.0f);
+
 		// Depth of field 
 		// pbrt page 313 - 318
         // The range of distances from the lens at which objects appear in focus is called the len's depth of field
