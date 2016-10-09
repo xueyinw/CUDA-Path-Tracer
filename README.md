@@ -40,4 +40,25 @@ STATUS | SORT_BY_MATERIAL | CACHE_FIRST_BOUNCE | STREAM_COMPATION | 5000 INTERAT
     | OFF| OFF | ON  | 169.234
     | OFF| OFF | OFF | 117.215
 
-Above results is based on my cornellTestDOFLAB.txt
+Above results is based on my cornellTestDOFLAB.txt.
+I used Siglab Machine to run all the results.
+
+###How to implement these Toggle?
+In pathtrace.cu, using Macro definition to realize this :)
+```java
+#define SORT_BY_MATERIAL 0
+#define CACHE_FIRST_INTERSECTION 0
+#define STREAM_COMPACTION 0
+```
+Thanks google groups!
+
+For `STREAM_COMPACTION`, I used `thrust::partition()` method to calculate number of paths alive.
+
+For `CACHE_FIRST_INTERSECTION`, I made two helper variables:
+```java
+bool cache_first_intersection 
+static ShadeableIntersection * dev_first_intersections 
+```
+and use cudaMemcpy() method to copy the first batch of intersections into dev_first_intersection memory. 
+
+For `SORT_BY_MATERIAL`, I made helper comparator `MaterialComparator()` and used `thrust::sort_by_key()` method to realize sorting by mateiral.  
