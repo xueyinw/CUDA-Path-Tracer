@@ -100,7 +100,7 @@ thrust::default_random_engine &rng) {
 		pathSegment.ray.origin = intersect + 1e-3f * (glm::normalize(pathSegment.ray.direction));
 		pathSegment.color *= m.color * m.specular.color;
 
-	} else if (prob > (1 - m.hasRefractive - m.hasReflective) && prob < (1 - m.hasRefractive)) { //reflection dominate
+	} else if (prob > (1 - m.hasRefractive - m.hasReflective) && prob < (1 - m.hasRefractive)) { //reflection dominate & diffuse combined
 		if (0.5f * m.hasReflective < u01(rng)) { //50% percent
 			pathSegment.ray.direction = pathSegment.ray.direction - 2.0f * normal * (glm::dot(pathSegment.ray.direction, normal));
 			pathSegment.ray.origin = intersect + 1e-3f * (glm::normalize(pathSegment.ray.direction));
@@ -111,7 +111,7 @@ thrust::default_random_engine &rng) {
 			pathSegment.color *= m.color;
 		}
 
-	} else { //in case I forgot something
+	} else { 
 		pathSegment.ray.direction = calculateRandomDirectionInHemisphere(normal, rng);
 		pathSegment.ray.origin = intersect + 1e-3f * (glm::normalize(pathSegment.ray.direction));
 		pathSegment.color *= m.color;
