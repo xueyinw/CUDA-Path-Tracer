@@ -6,6 +6,7 @@
 #include <thrust/remove.h>
 #include <thrust/device_ptr.h>
 #include <thrust/sort.h>
+#include <glm/gtc/matrix_inverse.hpp>
 
 #include "sceneStructs.h"
 #include "scene.h"
@@ -16,9 +17,12 @@
 #include "intersections.h"
 #include "interactions.h"
 
+
 #define SORT_BY_MATERIAL 0
 #define CACHE_FIRST_INTERSECTION 0
 #define STREAM_COMPACTION 0
+#define DOF true
+#define MOTION_BLUR 1 
 #define ERRORCHECK 1
 
 #define FILENAME (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__)
@@ -104,12 +108,12 @@ void pathtraceInit(Scene *scene) {
   	cudaMalloc(&dev_intersections, pixelcount * sizeof(ShadeableIntersection));
   	cudaMemset(dev_intersections, 0, pixelcount * sizeof(ShadeableIntersection));
    
-	cudaMalloc(&dev_first_intersections, pixelcount * sizeof(ShadeableIntersection));
-	cudaMemset(dev_first_intersections, 0, pixelcount * sizeof(ShadeableIntersection));
-	
 	// TODO: initialize any extra device memeory you need
 	cache_first_intersection = false;
 
+	cudaMalloc(&dev_first_intersections, pixelcount * sizeof(ShadeableIntersection));
+	cudaMemset(dev_first_intersections, 0, pixelcount * sizeof(ShadeableIntersection));
+ 
     checkCUDAError("pathtraceInit");
 }
 
@@ -124,6 +128,47 @@ void pathtraceFree() {
     checkCUDAError("pathtraceFree");
 }
 
+
+//Reference: PBRT source code 
+//ConcentricSampleDisk
+__device__ glm::vec2 ConcentricSampleDisk(float u1, float u2) {
+    float r, theta;
+	float a, b;
+    // Map uniform random numbers to $[-1,1]^2$
+    float sx = 2 * u1 - 1;
+	float sy = 2 * u2 - 1;
+    if (sx == 0.0 && sy == 0.0) {
+	    return glm::vec2(0.f);
+	}
+	if (sx >= -sy) {
+		if (sx > sy) {
+	 // Handle first region of disk
+            r = sx;
+	        if (sy > 0.0) theta = sy / r;
+		    else          theta = 8.0f + sy / r;
+		} else {
+   // Handle second region of disk
+			r = sy;
+		    theta = 2.0f - sx / r;
+		}
+	} else {
+	 if (sx <= sy) {
+	 // Handle third region of disk
+	    r = -sx;
+		theta = 4.0f - sy / r;
+		} else {
+     // Handle fourth region of disk
+        r = -sy;
+	    theta = 6.0f + sx / r;
+	 }
+	}
+	 theta *= PI / 4.f;
+	 a = r * cosf(theta);
+	 b = r * sinf(theta);
+	 glm::vec2 returnValue(a, b);
+	 return returnValue;
+}
+
 /**
 * Generate PathSegments with rays from the camera through the screen into the
 * scene, which is the first bounce of rays.
@@ -132,24 +177,48 @@ void pathtraceFree() {
 * motion blur - jitter rays "in time"
 * lens effect - jitter ray origin positions based on a lens
 */
+//__global__ void generateRayFromCamera(Camera cam, int iter, int traceDepth, PathSegment* pathSegments)
 __global__ void generateRayFromCamera(Camera cam, int iter, int traceDepth, PathSegment* pathSegments)
 {
 	int x = (blockIdx.x * blockDim.x) + threadIdx.x;
 	int y = (blockIdx.y * blockDim.y) + threadIdx.y;
 
+	thrust::default_random_engine rng = makeSeededRandomEngine(iter, (x + (y * cam.resolution.x)), 0);
+	thrust::uniform_real_distribution<float> u01(0, 1);
+
 	if (x < cam.resolution.x && y < cam.resolution.y) {
+		//Calculate index
 		int index = x + (y * cam.resolution.x);
 		PathSegment & segment = pathSegments[index];
 
 		segment.ray.origin = cam.position;
         segment.color = glm::vec3(1.0f, 1.0f, 1.0f);
-
-		// TODO: implement antialiasing by jittering the ray
+		// Depth of field 
+		// pbrt page 313 - 318
+        // The range of distances from the lens at which objects appear in focus is called the len's depth of field
+      
+        // TODO: implement antialiasing by jittering the ray
 		segment.ray.direction = glm::normalize(cam.view
-			- cam.right * cam.pixelLength.x * ((float)x - (float)cam.resolution.x * 0.5f)
-			- cam.up * cam.pixelLength.y * ((float)y - (float)cam.resolution.y * 0.5f)
+			- cam.right * cam.pixelLength.x * ((float)(x + u01(rng)) - (float)cam.resolution.x * 0.5f)
+			- cam.up * cam.pixelLength.y * ((float)(y + u01(rng)) - (float)cam.resolution.y * 0.5f)
 			);
 
+		//segment.ray.direction = glm::normalize(cam.view
+		//	- cam.right * cam.pixelLength.x * ((float)(x) - (float)cam.resolution.x * 0.5f)
+		//	- cam.up * cam.pixelLength.y * ((float)(y) - (float)cam.resolution.y * 0.5f)
+		//	);
+		if (DOF == true) {
+			glm::vec2 returnValue = ConcentricSampleDisk(u01(rng), u01(rng));
+			returnValue.x *= cam.lensRadius;
+			returnValue.y *= cam.lensRadius;
+			//pbrt page 318
+			float ft = glm::abs(cam.focalDistance / cam.view.z);
+			glm::vec3 Pfocus = segment.ray.direction * ft + segment.ray.origin;
+
+			segment.ray.origin += returnValue.x * cam.right + returnValue.y * cam.up;
+			segment.ray.direction = glm::normalize(Pfocus - segment.ray.origin);
+		}
+		
 		segment.pixelIndex = index;
 		segment.remainingBounces = traceDepth;
 	}
@@ -272,7 +341,7 @@ __global__ void shadeFakeMaterial (
       // like what you would expect from shading in a rasterizer like OpenGL.
       // TODO: replace this! you should be able to start with basically a one-liner
       else {
-		scatterRay(pathSegments[idx], intersection.position, intersection.surfaceNormal, material, rng);
+		  scatterRay(pathSegments[idx], intersection.position, intersection.surfaceNormal, material, rng);
 		if (pathSegments[idx].remainingBounces < 0)  {
 			pathSegments[idx].color = glm::vec3(0.f);
 		}
@@ -308,8 +377,7 @@ __global__ void finalGather(int nPaths, glm::vec3 * image, PathSegment * iterati
 //thrust document
 struct isPathAlive
 {
-	__host__ __device__
-		bool operator()(const PathSegment& path_segment)
+	__host__ __device__  bool operator()(const PathSegment& path_segment)
 	{
 		return path_segment.remainingBounces >= 0;
 	}
@@ -332,6 +400,8 @@ void pathtrace(uchar4 *pbo, int frame, int iter) {
     const int traceDepth = hst_scene->state.traceDepth;
     const Camera &cam = hst_scene->state.camera;
     const int pixelcount = cam.resolution.x * cam.resolution.y;
+	const Geom *hstSceneGeoms = &(hst_scene->geoms)[0];
+	Geom *motionBlurGeoms = &(hst_scene->geoms)[0];
 
 	// 2D block for generating ray from camera
     const dim3 blockSize2d(8, 8);
@@ -372,8 +442,29 @@ void pathtrace(uchar4 *pbo, int frame, int iter) {
     //   for you.
 
     // TODO: perform one iteration of path tracing
+ 
+	//toggle between motion blur and non-motion-blur
+#if MOTION_BLUR  
+	for (int i = 0; i < hst_scene->geoms.size(); i++) {
+		motionBlurGeoms[i] = hstSceneGeoms[i];
+		motionBlurGeoms[i].translation.x += hstSceneGeoms[i].motion.x / 1024.f;
+		motionBlurGeoms[i].translation.y += hstSceneGeoms[i].motion.y / 1024.f;
+		motionBlurGeoms[i].translation.z += hstSceneGeoms[i].motion.z / 1024.f;
+		//keep on updating all its transform information
+		motionBlurGeoms[i].transform = utilityCore::buildTransformationMatrix(motionBlurGeoms[i].translation, motionBlurGeoms[i].rotation, motionBlurGeoms[i].scale);
+		motionBlurGeoms[i].invTranspose = glm::inverseTranspose(motionBlurGeoms[i].transform);
+		motionBlurGeoms[i].inverseTransform = glm::inverse(motionBlurGeoms[i].transform);
+	}
+	
+	cudaMemcpy(dev_geoms, motionBlurGeoms, hst_scene->geoms.size() * sizeof(Geom), cudaMemcpyHostToDevice);
 
-	generateRayFromCamera <<<blocksPerGrid2d, blockSize2d >>>(cam, iter, traceDepth, dev_paths);
+#elif
+	cudaMemcpy(dev_geoms, geoms, hst_scene->geoms.size() * sizeof(Geom), cudaMemcpyHostToDevice);
+}
+#endif
+
+//	generateRayFromCamera <<<blocksPerGrid2d, blockSize2d >>>(cam, iter, traceDepth, dev_paths);
+	generateRayFromCamera << <blocksPerGrid2d, blockSize2d >> >(cam, iter, traceDepth, dev_paths);
 	checkCUDAError("generate camera ray");
 
 	int depth = 0;
@@ -385,28 +476,32 @@ void pathtrace(uchar4 *pbo, int frame, int iter) {
 	// Shoot ray into scene, bounce between objects, push shading chunks
 
     bool iterationComplete = false;
+
+	//*******************************************************//
+	//******************big while begin**********************//
 	while (!iterationComplete) {
 	// clean shading chunks
-	cudaMemset(dev_intersections, 0, pixelcount * sizeof(ShadeableIntersection));
+	    cudaMemset(dev_intersections, 0, pixelcount * sizeof(ShadeableIntersection));
 	// tracing
-	dim3 numblocksPathSegmentTracing = (num_paths_alive + blockSize1d - 1) / blockSize1d;
-	if (depth == 0 && cache_first_intersection) {
-		cudaMemcpy(dev_intersections, dev_first_intersections, num_paths * sizeof(dev_first_intersections[0]), cudaMemcpyDeviceToDevice);
-	} else {
-		computeIntersections << <numblocksPathSegmentTracing, blockSize1d >> > (
-			depth
-			, num_paths_alive
-			, dev_paths
-			, dev_geoms
-			, hst_scene->geoms.size()
-			, dev_intersections
-			);
-	}
+	    dim3 numblocksPathSegmentTracing = (num_paths_alive + blockSize1d - 1) / blockSize1d;
+	    if (depth == 0 && cache_first_intersection) {
+		    cudaMemcpy(dev_intersections, dev_first_intersections, num_paths * sizeof(dev_first_intersections[0]), cudaMemcpyDeviceToDevice);
+	    } else {
+		    computeIntersections << <numblocksPathSegmentTracing, blockSize1d >> > (
+			    depth
+			    , num_paths_alive
+			    , dev_paths
+			    , dev_geoms
+			    , hst_scene->geoms.size()
+			    , dev_intersections
+			    );
+	    }
 
-	checkCUDAError("trace one bounce");
-	cudaDeviceSynchronize();
-	depth++;
+	    checkCUDAError("trace one bounce");
+	    cudaDeviceSynchronize();
+	    depth++;
 
+//Toggle between cache first intersection
 #if CACHE_FIRST_INTERSECTION
     if (!cache_first_intersection) {
 		cache_first_intersection = true;
@@ -414,6 +509,7 @@ void pathtrace(uchar4 *pbo, int frame, int iter) {
 	}
 #endif
 
+//Toggle sort by material. WHY SO SLOW......(not using it)
 #if SORT_BY_MATERIAL
 	//Sort by material
 	thrust::sort_by_key(thrust::device, dev_intersections, dev_intersections + num_paths_alive, dev_paths, MaterialComparator());
@@ -428,17 +524,18 @@ void pathtrace(uchar4 *pbo, int frame, int iter) {
   // TODO: compare between directly shading the path segments and shading
   // path segments that have been reshuffled to be contiguous in memory.
 
-  shadeFakeMaterial<<<numblocksPathSegmentTracing, blockSize1d>>> (
-    iter,
-	num_paths_alive,
-    dev_intersections,
-    dev_paths,
-    dev_materials
-  ); 
+      shadeFakeMaterial<<<numblocksPathSegmentTracing, blockSize1d>>> (
+        iter,
+	    num_paths_alive,
+        dev_intersections,
+        dev_paths,
+        dev_materials
+      ); 
 
+//Toggle stream compaction
+//Google group reminder: using thrust::partition
 #if STREAM_COMPACTION
-  auto after_partition = thrust::partition(thrust::device, thrust_dev_paths, thrust_dev_paths + num_paths_alive, isPathAlive());
-  num_paths_alive = after_partition - thrust_dev_paths;
+  num_paths_alive = thrust::partition(thrust::device, thrust_dev_paths, thrust_dev_paths + num_paths_alive, isPathAlive()) - thrust_dev_paths;
   iterationComplete = (num_paths_alive <= 0); // TODO: should be based off stream compaction results.
 #else 
   num_paths_alive = num_paths; 
@@ -446,7 +543,8 @@ void pathtrace(uchar4 *pbo, int frame, int iter) {
 #endif
 
 	}
-
+	//*******************************************************//
+	//*****************big while end*************************//
   // Assemble this iteration and apply it to the image
   dim3 numBlocksPixels = (pixelcount + blockSize1d - 1) / blockSize1d;
 	finalGather<<<numBlocksPixels, blockSize1d>>>(num_paths, dev_image, dev_paths);

@@ -26,6 +26,7 @@ struct Geom {
     glm::mat4 transform;
     glm::mat4 inverseTransform;
     glm::mat4 invTranspose;
+	glm::vec3 motion; //for motion blur
 };
 
 struct Material {
@@ -49,6 +50,8 @@ struct Camera {
     glm::vec3 right;
     glm::vec2 fov;
     glm::vec2 pixelLength;
+	float lensRadius;
+	float focalDistance;
 };
 
 struct RenderState {
@@ -64,7 +67,7 @@ struct PathSegment {
 	glm::vec3 color;
 	int pixelIndex;
 	int remainingBounces;
-};
+ };
 
 // Use with a corresponding PathSegment to do:
 // 1) color contribution computation
