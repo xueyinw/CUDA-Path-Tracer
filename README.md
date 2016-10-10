@@ -53,12 +53,13 @@ Motion Blur: The left sphere and middle cube is moving during the whole render p
 * `Left Ball` : Refraction = 1
 * `Middle Cube`: Reflection = 0.4, Refraction = 0.6, Refraction + Reflection = 1, No Diffuse,
 * `Right Ball`: Reflection = 0.2, Refraction = 0.2, Diffuse = 0.6
-|Focal Length = 10.5 | Focal Length = 9 |
-|------|------|
-|![alt text](https://github.com/xueyinw/Project3-CUDA-Path-Tracer/blob/master/results/cornellTestFresnel.2016-10-10_00-57-14z.5000samp_10_5.png "DOF, FOCAL LENGTH = 10.5") | ![alt text](https://github.com/xueyinw/Project3-CUDA-Path-Tracer/blob/master/results/cornellTestFresnel.2016-10-10_01-01-39z.5000samp_9.png "DOF, FOCAL LENGTH = 9") |
 
 ####Original Pic
 ![alt text](https://github.com/xueyinw/Project3-CUDA-Path-Tracer/blob/master/results/cornellTestFresnel.2016-10-10_00-49-35z.5000samp_original.png "Without DOF") 
+
+|Focal Length = 10.5 | Focal Length = 9 |
+|------|------|
+|![alt text](https://github.com/xueyinw/Project3-CUDA-Path-Tracer/blob/master/results/cornellTestFresnel.2016-10-10_00-57-14z.5000samp_10_5.png "DOF, FOCAL LENGTH = 10.5") | ![alt text](https://github.com/xueyinw/Project3-CUDA-Path-Tracer/blob/master/results/cornellTestFresnel.2016-10-10_01-01-39z.5000samp_9.png "DOF, FOCAL LENGTH = 9") |
 
 ####SEE WHERE I START FROM...
 ####BE CONFIDENT ABOUT YOUR HARD WORK!!! BE CONFIDENT ON THE WAY OF GPU!!! BE CONFIDENT WHEN FINDING A JOB!!!
