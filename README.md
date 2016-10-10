@@ -96,5 +96,9 @@ For `SORT_BY_MATERIAL`, I made helper comparator `MaterialComparator()` and used
 ###What can we learn from the table above?
 * SORT_BY_MATERIAL is the slowerst one.. If there're a lot of materials in this code, I think that should be better. 
 * CACHE_FIRST_INTERSECTION : Totally went wrong when I opened DOF. But without DOF, result is good.
-* STREAM_COMPACTION : Slower then all-OFF, I think maybe the ray's amount is huge, so the method takes unnecessary time. The method is good, yet sorting/compaction is slow itself.
+* STREAM_COMPACTION : Slower than all-OFF, I think maybe the ray's amount is huge, so the method takes unnecessary time. The method itself is good, yet sorting/compaction is slow (which is a pity :(.
+
+###Dive into CUDA
+![alt text](https://github.com/xueyinw/Project3-CUDA-Path-Tracer/blob/master/results/CUDA_SUMMARY.PNG "CUDA_SUMMARY")
+From the picture above, we could see ComputerIntersections is the most time wasted(72.79%), since this function is used to calculate all the intersections, and as we noticed, the ray's amount is huge.
 
