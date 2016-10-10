@@ -28,9 +28,6 @@
 
 ####Fresnel Refraction
 Using Schlick's Approximation(http://graphics.stanford.edu/courses/cs148-10-summer/docs/2006--degreve--reflection_refraction.pdf)
-* `Left Ball` : RGB = (0.98, 0.98, 0.98), Specular RGB = (0.25, 0.25, 0.8),  Reflection = 0.3, Refraction = 0.2, Diffuse = 0.5
-* `Middle Cube`: Reflection = 0.8, Refraction = 0.2, No Diffuse
-* `Right Pink Ball`: Only Diffuse
 ![alt text](https://github.com/xueyinw/Project3-CUDA-Path-Tracer/blob/master/results/cornellTestFresnel.2016-10-09_23-18-37z.5000samp.png "Fresnel Refraction")
 
 ####Diffuse, Perfect Specular Wall, Transmissive and Depth of Field 
