@@ -71,6 +71,7 @@ STATUS | SORT_BY_MATERIAL | CACHE_FIRST_BOUNCE | STREAM_COMPATION | 5000 INTERAT
     | OFF| ON  | OFF | 100.689
     | OFF| OFF | ON  | 169.234
     | OFF| OFF | OFF | 117.215
+![alt text](https://github.com/xueyinw/Project3-CUDA-Path-Tracer/blob/master/results/performance_form.png "Table")
 
 Above results is based on my cornellTestDOFLAB.txt.
 I used Siglab Machine to run all the results.
