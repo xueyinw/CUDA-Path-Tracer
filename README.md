@@ -16,16 +16,18 @@
 3. toggle between sorting path/intersection continuous by material type
 4. toggle between cache first bounce
 
-###Extra Coolness...
+###Extra Coolness
 1. Refraction (e.g. glass/water) [PBRT 8.2] with Frensel effects using Schlick's approximation(finally...)  
 *Found great reference: http://graphics.stanford.edu/courses/cs148-10-summer/docs/2006--degreve--reflection_refraction.pdf*
 2. Physically-based depth-of-field
 3. Motion Blur
+4. More is coming!
 
 ==================================================================
 ###Result In Progress
 
-####Fresnel Refraction 
+####Fresnel Refraction
+Using Schlick's Approximation(http://graphics.stanford.edu/courses/cs148-10-summer/docs/2006--degreve--reflection_refraction.pdf)
 * `Left Ball` : RGB = (0.98, 0.98, 0.98), Specular RGB = (0.25, 0.25, 0.8),  Reflection = 0.3, Refraction = 0.2, Diffuse = 0.5
 * `Middle Cube`: Reflection = 0.8, Refraction = 0.2, No Diffuse
 * `Right Pink Ball`: Only Diffuse
