@@ -25,21 +25,35 @@
 ==================================================================
 ###Result In Progress
 
-####Diffuse, Perfect Specular Wall, Transmissive and Depth of Field 
-`Left Wall` : Reflection = 1, `Left Blue Ball`: Refraction = 1
-`Middle Purple Ball`: Refraction + Reflection = 1, No Diffuse, `Right Pink Ball`: Only Diffuse
-![alt text](https://github.com/xueyinw/Project3-CUDA-Path-Tracer/blob/master/results/cornellTestDOF.2016-10-09_19-18-26z.5000samp.png "Depth Of Field and Mirror")
-
 ####Fresnel Refraction 
-`Left Ball` : RGB = (0.98, 0.98, 0.98), Specular RGB = (0.25, 0.25, 0.8),  Reflection = 0.3, Refraction = 0.2, Diffuse = 0.5
-`Middle Cube`: Reflection = 0.8, Refraction = 0.2, No Diffuse
-`Right Pink Ball`: Only Diffuse
+* `Left Ball` : RGB = (0.98, 0.98, 0.98), Specular RGB = (0.25, 0.25, 0.8),  Reflection = 0.3, Refraction = 0.2, Diffuse = 0.5
+* `Middle Cube`: Reflection = 0.8, Refraction = 0.2, No Diffuse
+* `Right Pink Ball`: Only Diffuse
 ![alt text](https://github.com/xueyinw/Project3-CUDA-Path-Tracer/blob/master/results/cornellTestFresnel.2016-10-09_23-18-37z.5000samp.png "Fresnel Refraction")
 
-####Ideal Diffuse surfaces(without Anti-Aliasing)
+####Diffuse, Perfect Specular Wall, Transmissive and Depth of Field 
+* `Left Wall` : Reflection = 1
+* `Left Blue Ball`: Refraction = 1
+* `Middle Purple Ball`: Refraction + Reflection = 1, No Diffuse
+* `Right Pink Ball`: Only Diffuse
+![alt text](https://github.com/xueyinw/Project3-CUDA-Path-Tracer/blob/master/results/cornellTestDOF.2016-10-09_19-18-26z.5000samp.png "Depth Of Field and Mirror")
+
+####Motion Blur
+Motion Blur: The left sphere and middle cube is moving during the whole render process
+![alt text](https://github.com/xueyinw/Project3-CUDA-Path-Tracer/blob/master/results/cornellTestFresnel.2016-10-10_00-02-09z.5000samp.png "Motion Blur")
+
+####Depth of Field Comparison
+* `Left Ball` : Refraction = 1
+* `Middle Cube`: Reflection = 0.4, Refraction = 0.6, Refraction + Reflection = 1, No Diffuse,
+* `Right Ball`: Reflection = 0.2, Refraction = 0.2, Diffuse = 0.6
+
+Original Pic | Focal Length = 10.5 | Focal Length = 9  
+![alt text](https://github.com/xueyinw/Project3-CUDA-Path-Tracer/blob/master/results/cornellTestFresnel.2016-10-10_00-49-35z.5000samp_original.png "Without DOF")| ![alt text](https://github.com/xueyinw/Project3-CUDA-Path-Tracer/blob/master/results/cornellTestFresnel.2016-10-10_00-57-14z.5000samp_10_5 "DOF, FOCAL LENGTH = 10.5")| ![alt text](https://github.com/xueyinw/Project3-CUDA-Path-Tracer/blob/master/results/cornellTestFresnel.2016-10-10_00-57-14z.5000samp_9 "DOF, FOCAL LENGTH = 9 ")
+
+####Ideal Diffuse surfaces
 ![alt text](https://github.com/xueyinw/Project3-CUDA-Path-Tracer/blob/master/results/cornell.2016-10-03_01-03-54z.5000samp.png "Ideal Diffuse surfaces")
 
-####Perfectly specular-reflective surfaces(without Anti-Aliasing)
+####Perfectly specular-reflective surfaces
 ![alt text](https://github.com/xueyinw/Project3-CUDA-Path-Tracer/blob/master/results/cornell.2016-10-03_13-08-43z.5000samp.png "Perfectly specular-reflective surfaces")
 
 ==================================================================
