@@ -48,17 +48,17 @@ Motion Blur: The left sphere and middle cube is moving during the whole render p
 * `Right Ball`: Reflection = 0.2, Refraction = 0.2, Diffuse = 0.6
 ####Original Pic
 ![alt text](https://github.com/xueyinw/Project3-CUDA-Path-Tracer/blob/master/results/cornellTestFresnel.2016-10-10_00-49-35z.5000samp_original.png "Without DOF") 
-####Focal Length = 10.5 
-![alt text](https://github.com/xueyinw/Project3-CUDA-Path-Tracer/blob/master/results/cornellTestFresnel.2016-10-10_00-57-14z.5000samp_10_5.png "DOF, FOCAL LENGTH = 10.5")
-####Focal Length = 9  
-![alt text](https://github.com/xueyinw/Project3-CUDA-Path-Tracer/blob/master/results/cornellTestFresnel.2016-10-10_01-01-39z.5000samp_9.png "DOF, FOCAL LENGTH = 9")
 
-See where I start from....
-Be confident about your hard work!
-####Ideal Diffuse surfaces
-![alt text](https://github.com/xueyinw/Project3-CUDA-Path-Tracer/blob/master/results/cornell.2016-10-03_01-03-54z.5000samp.png "Ideal Diffuse surfaces")
-####Perfectly specular-reflective surfaces
-![alt text](https://github.com/xueyinw/Project3-CUDA-Path-Tracer/blob/master/results/cornell.2016-10-03_13-08-43z.5000samp.png "Perfectly specular-reflective surfaces")
+|Focal Length = 10.5 | Focal Length = 9 |
+|------|------|
+|![alt text](https://github.com/xueyinw/Project3-CUDA-Path-Tracer/blob/master/results/cornellTestFresnel.2016-10-10_00-57-14z.5000samp_10_5.png "DOF, FOCAL LENGTH = 10.5") | ![alt text](https://github.com/xueyinw/Project3-CUDA-Path-Tracer/blob/master/results/cornellTestFresnel.2016-10-10_01-01-39z.5000samp_9.png "DOF, FOCAL LENGTH = 9") |
+
+##SEE WHERE I START FROM...
+##BE CONFIDENT ABOUT YOUR HARD WORK!!! BE CONFIDENT ON THE WAY OF GPU!!! BE CONFIDENT WHEN FINDING A JOB!!!
+
+|Ideal Diffuse surfaces | Perfectly specular-reflective surfaces |
+|------|------|
+|![alt text](https://github.com/xueyinw/Project3-CUDA-Path-Tracer/blob/master/results/cornell.2016-10-03_01-03-54z.5000samp.png "Ideal Diffuse surfaces") | ![alt text](https://github.com/xueyinw/Project3-CUDA-Path-Tracer/blob/master/results/cornell.2016-10-03_13-08-43z.5000samp.png "Perfectly specular-reflective surfaces") |
 
 ==================================================================
 ###ON or OFF? SORT_BY_MATERIAL, CACHE_FIRST_BOUNCE, STREAM_COMPATION
