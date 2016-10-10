@@ -44,10 +44,8 @@ Using Schlick's Approximation(http://graphics.stanford.edu/courses/cs148-10-summ
 Motion Blur: The left sphere and middle cube is moving during the whole render process
 ![alt text](https://github.com/xueyinw/Project3-CUDA-Path-Tracer/blob/master/results/cornellTestFresnel.2016-10-10_00-02-09z.5000samp.png "Motion Blur")
 
-|The sphere and the cube | IS MOVING!|
-|------|------|
-|![alt text](https://github.com/xueyinw/Project3-CUDA-Path-Tracer/blob/master/results/cornellTestFresnel.2016-10-09_12-04-53z.5000samp.png  "original") | ![alt text](https://github.com/xueyinw/Project3-CUDA-Path-Tracer/blob/master/results/cornellTestFresnel.2016-10-09_15-28-33z.1038samp.png "moving")|
-|![alt text](https://github.com/xueyinw/Project3-CUDA-Path-Tracer/blob/master/results/cornellTestFresnel.2016-10-09_15-28-33z.1294samp.png  "moving") | ![alt text](https://github.com/xueyinw/Project3-CUDA-Path-Tracer/blob/master/results/cornellTestFresnel.2016-10-09_15-28-33z.1820samp.png "moving")|
+|![alt text](https://github.com/xueyinw/Project3-CUDA-Path-Tracer/blob/master/results/cornellTestFresnel.2016-10-09_18-51-14z.5000samp.png  "Motion Blur")
+
 
 ####Depth of Field Comparison
 * `Left Ball` : Refraction = 1
