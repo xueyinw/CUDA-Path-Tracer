@@ -105,6 +105,10 @@ For `SORT_BY_MATERIAL`, I made helper comparator `MaterialComparator()` and used
 * STREAM_COMPACTION : Slower than all-OFF, I think maybe the ray's amount is huge, so the method takes unnecessary time. The method itself is good, yet sorting/compaction is slow (which is a pity :(.
 
 ###Dive into CUDA
+![alt text](https://github.com/xueyinw/Project3-CUDA-Path-Tracer/blob/master/results/CUDA_SUMMARY_ONE.png "CUDA_TIMELINE")
+
 ![alt text](https://github.com/xueyinw/Project3-CUDA-Path-Tracer/blob/master/results/CUDA_SUMMARY.PNG "CUDA_SUMMARY")
-From the picture above, we could see ComputerIntersections is the most time wasted(72.79%), since this function is used to calculate all the intersections, and as we noticed, the ray's amount is huge.
+From the pictures above, we could see `ComputerIntersections` is the most time wasted(72.79%), since this function is used to calculate all the intersections, and as we noticed, the ray's amount is huge.
+
+The second part is `shadeFakeMaterial`, since we need to deal with each ray's color, remainging bounces information.
 
