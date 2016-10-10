@@ -96,7 +96,7 @@ and use cudaMemcpy() method to copy the first batch of intersections into dev_fi
 For `SORT_BY_MATERIAL`, I made helper comparator `MaterialComparator()` and used `thrust::sort_by_key()` method to realize sorting by mateiral.  
 
 ###What can we learn from the table above?
-* SORT_BY_MATERIAL is the slowerst one.. If there're a lot of materials in this code, I think that should be better. 
+* SORT_BY_MATERIAL is the slowest one.. If there're a lot of materials in this code, I think that should be better. 
 * CACHE_FIRST_INTERSECTION : Totally went wrong when I opened DOF. But without DOF, result is good.
 * STREAM_COMPACTION : Slower than all-OFF, I think maybe the ray's amount is huge, so the method takes unnecessary time. The method itself is good, yet sorting/compaction is slow (which is a pity :(.
 
