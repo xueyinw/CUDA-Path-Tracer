@@ -35,7 +35,11 @@ Using Schlick's Approximation(http://graphics.stanford.edu/courses/cs148-10-summ
 * `Left Blue Ball`: Refraction = 1
 * `Middle Purple Ball`: Refraction + Reflection = 1, No Diffuse
 * `Right Pink Ball`: Only Diffuse
-![alt text](https://github.com/xueyinw/Project3-CUDA-Path-Tracer/blob/master/results/cornellTestDOF.2016-10-09_19-18-26z.5000samp.png "Depth Of Field and Mirror")
+
+
+|Original | With DOF |
+|------|------|
+|![alt text](https://github.com/xueyinw/Project3-CUDA-Path-Tracer/blob/master/results/cornellTestDOF.2016-10-11_03-52-19z.5000samp.png "Original") | ![alt text](https://github.com/xueyinw/Project3-CUDA-Path-Tracer/blob/master/results/cornellTestDOF.2016-10-09_19-18-26z.5000samp.png "Depth Of Field and Mirror") |
 
 ####Motion Blur
 Motion Blur: The left sphere and middle cube is moving during the whole render process
